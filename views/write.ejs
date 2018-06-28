@@ -1,0 +1,27 @@
+<% include partials/header.ejs %>
+
+<div class="container">
+<div class="form-header">
+  <% if (Object.keys(errors).length === 0) { %>
+    <h2>Please write a review about your experience here:</h2>
+  <% } else { %>
+    <h2 class="errors-heading">Oops, please correct the following:</h2>
+    <ul class="errors-list">
+      <% Object.values(errors).forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+</div>
+
+<form method="post" action="/write" novalidate>
+<div class="form-group">
+    <label for="_bdata">Your review:</label>
+    <textarea class="form-control" id="_bdata" name="_bdata"></textarea>
+  <button type="submit" class="btn btn-primary" id="bc-btn">Submit</button>
+  </div>
+</form>
+
+</div> <!-- container-->
+
+<% include partials/footer.ejs %>
