@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const _ = require('lodash');
 const fetch = require('node-fetch');
+const client = require('./server.js');
 
 router.get('/', (req, res)=>{
   res.render("app",{ messages: req.flash(), title:'All records' });
@@ -32,7 +33,6 @@ router.post('/write', [check('_bdata').isLength({min:1}).withMessage('Please wri
   (req,res)=>{
     const errors = validationResult(req)
     if(!errors.isEmpty()) {
-      console.log("Errora: ", errors.mapped());
       return res.render('write', {
           data: req.body,
           errors: errors.mapped(),
@@ -41,10 +41,26 @@ router.post('/write', [check('_bdata').isLength({min:1}).withMessage('Please wri
     }
 
     const data = matchedData(req)
+
+    let remarks = data._bdata;
+    var toaddress = "oXCsMUyX3mLJEdnn8SXoH6gyPW9Jd6kjYu";
+    var amount = 1;
+
+    try {
+        client.sendToAddress(toaddress, amount, "Guestbook", "Alam Puri Customer", false, false, 1, 'UNSET', remarks).then((txnid) => console.log(txnid));
+    }catch(err){
+        console.log("Unable to send FLO." + err.message);
+    }
+
     req.flash('success', 'Your remarks was successfully entered.')
     res.redirect('/')
 
   }
 )
+
+router.get('/getbalance', (req, res)=>{
+  client.getBalance().then((balance) =>  res.json({"balance" : balance}));
+})
+
 
 module.exports = router

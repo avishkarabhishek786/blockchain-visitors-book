@@ -1,6 +1,10 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+
+const Client = require('bitcoin-core');
+const client = require('./server')
+
 const crypto = require('crypto');
 const routes = require('./routes');
 
@@ -37,6 +41,7 @@ app.use((req, res,next)=>{
 });
 
 app.use((err, req, res, next)=>{
+  console.log(err);
   res.status(500).send("Page Broke!");
 });
 
