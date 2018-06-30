@@ -11,14 +11,18 @@ router.get('/', (req, res)=>{
 });
 
 router.get('/cmt', (req, res)=>{
-    var body = {"search": "Alexandria", "page": 0, "results-per-page": 5};
+    var body = {"search": "@IndiaToday", "page": 0, "results-per-page": 5};
     fetch('https://api.alexandria.io/florincoin/searchTxComment', {
         method: 'POST',
         body:    JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
     })
         .then(res => res.json())
-        .then(json => console.log(json));
+        //.then(res.render("app", json))
+        .then(json=>res.render("app", { messages: req.flash(), title:'All records', bdata: json }))
+        .catch((e)=>{
+          console.log(e);
+        });
 })
 
 router.get('/write', (req, res)=>{
